@@ -1,0 +1,31 @@
+﻿@page
+@model BusApp.Models.ViewModels.AddBusToLineViewModel
+
+@{
+}
+
+<form method="post" asp-action="AddBusToLine">
+    <div class="form-group">
+        <label for="LineId">Select Line:</label>
+        <select asp-for="LineId" class="form-control">
+            <option value="">Select a Line</option>
+            @foreach (var line in Model.Lines)
+            {
+                <option value="@line.Id">@line.Name</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="BusId">Select Bus:</label>
+        <select asp-for="BusId" class="form-control">
+            <option value="">Select a Bus</option>
+            @foreach (var bus in Model.Buses)
+            {
+                <option value="@bus.Id">@bus.No</option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Bus</button>
+</form>

@@ -1,4 +1,4 @@
-﻿@model BusApp.Models.Line
+﻿@model BusApp.Models.ViewModels.LineCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,14 +13,23 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Line.Name" class="control-label"></label>
+                <input asp-for="Line.Name" class="form-control" />
+                <span asp-validation-for="Line.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="length" class="control-label"></label>
-                <input asp-for="length" class="form-control" />
-                <span asp-validation-for="length" class="text-danger"></span>
+                <label asp-for="Line.length" class="control-label"></label>
+                <input asp-for="Line.length" class="form-control" />
+                <span asp-validation-for="Line.length" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <label>Select Buses</label>
+                <select asp-for="Line.busses" 
+                        asp-items="@(new SelectList(Model.Buses, "Id","No"))"
+                        multiple class="form-control">
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

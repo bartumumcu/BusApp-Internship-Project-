@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusApp.Data;
 using BusApp.Models;
+using BusApp.Models.ViewModels;
 
 namespace BusApp.Controllers
 {
@@ -48,7 +49,17 @@ namespace BusApp.Controllers
         // GET: Trips/Create
         public IActionResult Create()
         {
-            return View();
+            var viewmodel = new LineCreateViewModel()
+            {
+                Line = new Line(),
+                Buses = _context.Bus.ToList(),
+                Lines =_context.Line.ToList(),
+                Drivers = _context.Driver.ToList(),
+                Trip= new Trip(),
+                Bus = new Bus(),
+                Driver = new Driver() 
+            };
+            return View(viewmodel);
         }
 
         // POST: Trips/Create

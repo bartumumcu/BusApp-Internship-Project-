@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using BusApp.Data;
+using System.Text.Json.Serialization;
 
 namespace BusApp.Models
 {
@@ -16,6 +17,7 @@ namespace BusApp.Models
         //Functions
         public void calcProfit()
         {
+            var context = new ApplicationDbContext(); 
             int pro = (this.ETime - this.STime).Hours * 100;
             this.Driver.addMoney(pro);            
         }

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BusApp.Data;
 using BusApp.Models;
+using BusApp.Models.ViewModels;
+using System.Xml;
 
 namespace BusApp.Controllers
 {
@@ -22,9 +24,10 @@ namespace BusApp.Controllers
         // GET: Lines
         public async Task<IActionResult> Index()
         {
-              return _context.Line != null ? 
-                          View(await _context.Line.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Line'  is null.");
+            return _context.Line != null ?
+                        View(await _context.Line.ToListAsync()) :
+                        Problem("Entity set 'ApplicationDbContext.Line'  is null.");
+
         }
 
         // GET: Lines/Details/5
@@ -46,9 +49,15 @@ namespace BusApp.Controllers
         }
 
         // GET: Lines/Create
+         
         public IActionResult Create()
         {
-            return View();
+            var viewmodel = new LineCreateViewModel()
+            {
+                Line = new Line(),
+                Buses = _context.Bus.ToList()
+                };
+            return View(viewmodel);
         }
 
         // POST: Lines/Create
@@ -56,7 +65,7 @@ namespace BusApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,length")] Line line)
+        public async Task<IActionResult> Create(Line line)
         {
             if (ModelState.IsValid)
             {
@@ -64,8 +73,15 @@ namespace BusApp.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(line);
+            //var viewModel = new LineCreateViewModel()
+            //{
+            //    Line = new Line(),
+            //    Buses = _context.Bus.ToList()
+            //};
+
+            return View();
         }
+
 
         // GET: Lines/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -150,14 +166,54 @@ namespace BusApp.Controllers
             {
                 _context.Line.Remove(line);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
+
+        //AddBusToLine
+        public IActionResult AddBusToLine()
+        {
+            var viewModel = new AddBusToLineViewModel
+            {
+                Lines = _context.Line.ToList(),
+                Buses = _context.Bus.ToList()
+            };
+            return View(viewModel);
+        }
+
+        //AddbusToLine Post
+        [HttpPost]
+        public IActionResult AddBusToLine(AddBusToLineViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var line = _context.Line.Include(l => l.busses).FirstOrDefault(l => l.Id == viewModel.LineId);
+                var bus = _context.Bus.Find(viewModel.BusId);
+                if ((line != null && bus != null))
+                {
+                    line.busses.Add(bus);
+                    _context.SaveChanges();
+
+                    return RedirectToAction("Index", "Line");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Invalid line or bus selection.");
+                }
+            }
+            viewModel.Lines = _context.Line.ToList();
+            viewModel.Buses = _context.Bus.ToList();
+            return View(viewModel);
+        }
+
+
+
+
         private bool LineExists(int id)
         {
-          return (_context.Line?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Line?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

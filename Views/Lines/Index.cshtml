@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Hatlar ve Otobüsler</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -18,7 +18,10 @@
             <th>
                 @Html.DisplayNameFor(model => model.length)
             </th>
-            <th></th>
+            <th>
+                Busses
+            </th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -31,9 +34,13 @@
                 @Html.DisplayFor(modelItem => item.length)
             </td>
             <td>
+                    @string.Join(", ", item.busses.Select(bus => bus.No))
+            </td>
+            <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="AddBusToLine" asp-all-route-id="@item.Id">Add New Bus To Line</a>
             </td>
         </tr>
 }
