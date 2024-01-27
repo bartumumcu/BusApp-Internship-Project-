@@ -1,0 +1,1 @@
+A website I created as a project during my summer internship in 2023. It is a bus tracking website using MVC pattern coded with ASP.NET C#. I focused on the backend of the application, frontend is basic html.
